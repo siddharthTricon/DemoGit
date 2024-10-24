@@ -5,3 +5,12 @@ function add(){
     console.log(c);
 }
 add();
+
+var e = 4;
+var f = 5;
+function multiply()
+{
+    var g = e * f;
+    console.log(g);
+}
+multiply();
