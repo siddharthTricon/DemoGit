@@ -1,8 +1,37 @@
 pipeline {
-agent any stages 
-  {stage('Build') { steps { echo 'Building...' } } 
-   stage('Test') { steps { echo 'Testing...' // Here, include commands to run your test files, e.g., `npm test` or `pytest` } } 
-   stage('Deploy') { steps { echo 'Deploying...' }
-  }
+    agent any
+ 
+    environment {
+        // Define Python version if using a specific one
+        PYTHON_VERSION = 'python3'
+    }
+ 
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // Clone the repository
+                git url: 'https://github.com/siddharthTricon/DemoGit', branch: 'main'
+            }
+        }
+ 
+ 
+        stage('Deploy') {
+            steps {
+                // Dummy deploy step (replace with actual deployment commands)
+                echo 'Deploying the application...'
+            }
+        }
+    }
+ 
+    post {
+        always {
+            echo 'Cleaning up...'
+        }
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed. Please check the errors.'
+        }
+    }
 }
-                 }
