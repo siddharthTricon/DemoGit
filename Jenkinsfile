@@ -10,7 +10,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 // Clone the repository containing your JavaScript code
-                git url: 'https://github.com/your-repo-url/your-repo-name.git', branch: 'main'
+                git url: 'https://github.com/siddharthTricon/DemoGit.git', branch: 'main'
             }
         }
 
