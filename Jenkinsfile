@@ -3,53 +3,42 @@ pipeline {
     agent any
 
     environment {
-        NODE_VERSION = '14' // Specify Node.js version
+        PYTHON_VERSION = 'python3'
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                // Clone the repository containing your JavaScript code
-                git url: 'https://github.com/siddharthTricon/DemoGit.git', branch: 'main'
+                git url: 'https://github.com/siddharthTricon/DemoGit', branch: 'main'
             }
         }
 
-        stage('Install Node.js') {
+        stage('Setup Environment') {
             steps {
-                // Install Node.js if not already available
-                sh 'curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | sudo -E bash -'
-                sh 'sudo apt-get install -y nodejs'
+                sh "${PYTHON_VERSION} -m venv venv"
+                sh ". venv/bin/activate && pip install -r requirements.txt"
             }
         }
 
         stage('Build') {
             steps {
-                // Perform any build steps here, such as linting or transpiling
                 echo 'Building the application...'
-                // Example: Lint the code if ESLint is installed
-                sh 'npx eslint path/to/your-script.js || true' // Lint, but do not fail build if lint errors occur
+                sh ". venv/bin/activate && python setup.py sdist" // Creates a source distribution
             }
         }
 
         stage('Test') {
             steps {
-                // Run tests if any test framework is available
                 echo 'Running tests...'
-                // Example: Add a simple test to validate the add and multiply functions
-                script {
-                    sh 'echo "console.log(\'Test passed: add and multiply functions.\')" > test.js' // Placeholder test
-                    sh 'node test.js'
-                }
+                sh ". venv/bin/activate && pytest --junitxml=report.xml"
             }
         }
 
         stage('Deploy') {
             steps {
-                // Add deployment commands here
                 echo 'Deploying the application...'
-                // This could involve copying files, starting a server, etc.
-                // Example placeholder: simply prints a deploy message
-                sh 'echo "Application deployed successfully."'
+                sh "scp -i /path/to/key.pem dist/*.tar.gz ubuntu@server-ip:/path/to/deployment"
+                sh "ssh -i /path/to/key.pem ubuntu@server-ip 'tar -xzvf /path/to/deployment/*.tar.gz -C /path/to/app'"
             }
         }
     }
@@ -59,11 +48,10 @@ pipeline {
             echo 'Cleaning up...'
         }
         success {
-            echo 'Pipeline executed successfully!'
+            echo 'Build succeeded!'
         }
         failure {
-            echo 'Pipeline failed. Please check the logs for errors.'
+            echo 'Build failed. Please check the errors.'
         }
     }
 }
-
