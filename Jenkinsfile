@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     // Upgrade pip and install dependencies globally
-                    bat '''
+                    sh '''
                         python -m pip install --upgrade pip
                     '''
                 }
@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Run tests using unittest
-                    bat 'python test_calculator.py'
+                    sh 'python test_calculator.py'
                 }
             }
         }
