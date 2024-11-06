@@ -14,7 +14,7 @@ pipeline {
                 script {
                     // Upgrade pip and install dependencies globally
                     sh '''
-                        python -m pip install --upgrade pip
+                        python3 -m pip install --upgrade pip
                     '''
                 }
             }
