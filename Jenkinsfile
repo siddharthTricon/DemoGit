@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the source code from your version control system
-                git url: 'https://github.com/siddharthTricon/DemoGit.git', branch: 'main'
+                git url: 'https://github.com/siddharthTricon/DemoGit', branch: 'main'
             }
         }
  
