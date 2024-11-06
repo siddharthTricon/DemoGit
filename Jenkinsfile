@@ -1,37 +1,45 @@
 pipeline {
     agent any
  
-    environment {
-        // Define Python version if using a specific one
-        PYTHON_VERSION = 'python3'
-    }
- 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                // Clone the repository
-                git url: 'https://github.com/siddharthTricon/DemoGit.git', branch: 'main'
+                // Checkout the source code from your version control system
+                git url: 'https://github.com/navneet-alt/Devops-Learning', branch: 'main'
             }
         }
  
- 
-        stage('Deploy') {
+        stage('Install Dependencies') {
             steps {
-                // Dummy deploy step (replace with actual deployment commands)
-                echo 'Deploying the application...'
+                script {
+                    // Upgrade pip and install dependencies globally
+                    bat '''
+                        python -m pip install --upgrade pip
+                    '''
+                }
+            }
+        }
+ 
+        stage('Run Tests') {
+            steps {
+                script {
+                    // Run tests using unittest
+                    bat 'python test_calculator.py'
+                }
             }
         }
     }
  
     post {
         always {
-            echo 'Cleaning up...'
+            // Clean up the workspace after the build
+            cleanWs()
         }
         success {
-            echo 'Build succeeded!'
+            echo 'Tests passed successfully!'
         }
         failure {
-            echo 'Build failed. Please check the errors.'
+            echo 'Tests failed!'
         }
     }
 }
